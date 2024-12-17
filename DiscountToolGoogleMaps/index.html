@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Discount Lookup Tool</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+</head>
+<body>
+  <div id="discount-tool">
+    <h2>Discount Lookup Tool</h2>
+    <div id="route-addresses">
+      <div>
+        <label for="start">Starting Address:</label>
+        <input type="text" id="start" placeholder="Enter starting address" />
+      </div>
+      <div>
+        <label for="end">Destination Address:</label>
+        <input type="text" id="end" placeholder="Enter destination address" />
+      </div>
+    </div>
+    <button onclick="performRoute()">Route</button>
+  </div>
+  <div id="map-container">
+    <div id="map" style="height: 500px; width: 100%;"></div>
+  </div>
+
+  <!-- Google Maps API -->
+  <script 
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYpNJXRFRuQq5IV8LQZi8E90r1gIaiORI&libraries=places" 
+    async 
+    defer>
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+  <script src="main.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYpNJXRFRuQq5IV8LQZi8E90r1gIaiORI&libraries=places&callback=initMap" async defer></script>
+
+</body>
+</html>

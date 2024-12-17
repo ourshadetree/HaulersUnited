@@ -1,0 +1,63 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+  }
+  
+  #discount-tool {
+    max-width: 600px;
+    margin: 20px auto;
+    text-align: center;
+    border: 2px solid #1A73E8;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 10px 20px rgba(26, 115, 232, 0.3);
+    background-color: white;
+  }
+  
+  #discount-tool h2 {
+    color: #1A73E8;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  #route-addresses label {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  #route-addresses input {
+    width: 80%;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #1A73E8;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+  
+  #discount-tool button {
+    width: 60%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #1A73E8;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  #map-container {
+    margin-top: 20px;
+    width: 100%;
+    height: 500px;
+  }
+  
+  #map {
+    width: 100%;
+    height: 500px;
+  }
+  
