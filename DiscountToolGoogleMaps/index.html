@@ -9,23 +9,31 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
 </head>
 <body>
-  <div id="discount-tool">
-    <h2>Discount Lookup Tool</h2>
-    <div id="route-addresses">
-      <div>
-        <label for="start">Starting Address:</label>
-        <input type="text" id="start" placeholder="Enter starting address" />
+  <div id="logo-container">
+    <a id="HaulersUnitedLogo" href="https://haulersunited.squarespace.com/" target="_blank">
+      <img src="assets/Haulers United Navy On White Logo.jpg" alt="Haulers United Logo and Link Back to Website">
+    </a>
+  </div>
+  <div id="tool-container">
+    <div id="discount-tool">
+      <h2>Discount Lookup Tool</h2>
+      <div id="route-addresses">
+        <div>
+          <label for="start">Starting Address:</label>
+          <input type="text" id="start" placeholder="Enter starting address" />
+        </div>
+        <div>
+          <label for="end">Destination Address:</label>
+          <input type="text" id="end" placeholder="Enter destination address" />
+        </div>
       </div>
-      <div>
-        <label for="end">Destination Address:</label>
-        <input type="text" id="end" placeholder="Enter destination address" />
-      </div>
+      <button onclick="performRoute()">Route</button>
     </div>
-    <button onclick="performRoute()">Route</button>
+    <div id="map-container">
+      <div id="map" style="height: 500px; width: 100%;"></div>
+    </div>
   </div>
-  <div id="map-container">
-    <div id="map" style="height: 500px; width: 100%;"></div>
-  </div>
+  
 
   <!-- Google Maps API -->
   <script 

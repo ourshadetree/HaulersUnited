@@ -7,47 +7,71 @@ let routeControl;
 // This function is for gathering information from the Google Sheets
 async function fetchLocations() {
   const pilotCSVUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTttM3XVDav2NLAIlSgDEbO7-gOVe6E3lGDau76EazO4iXTuswuhsfjgVWdE_tWIKMHmP6pTcL4s_0L/pub?output=csv';
-  const caseyCSVUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTttM3XVDav2NLAIlSgDEbO7-gOVe6E3lGDau76EazO4iXTuswuhsfjgVWdE_tWIKMHmP6pTcL4s_0L/pub?output=csv&sheet=Page2';
+  const caseyCSVUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS54WS48Ol3EXpqVS-2Rw7ePnqwFcnkiVzfONIGxIJqpWuruNuphr_qhpNFbVgHVrchKyjkCBfjM_zK/pub?gid=1692662712&single=true&output=csv'; // Correct URL for Sheet 2 (Casey)
 
   try {
+    // Fetch Pilot data from Sheet 1
     const pilotResponse = await fetch(pilotCSVUrl);
     if (!pilotResponse.ok) throw new Error("Error loading Pilot data");
 
+    // Fetch Casey data from Sheet 2
     const caseyResponse = await fetch(caseyCSVUrl);
     if (!caseyResponse.ok) throw new Error("Error loading Casey data");
 
     const pilotCsvText = await pilotResponse.text();
     const caseyCsvText = await caseyResponse.text();
 
-    const pilotData = Papa.parse(pilotCsvText, { header: true, skipEmptyLines: true }).data;
-    const caseyData = Papa.parse(caseyCsvText, { header: true, skipEmptyLines: true }).data;
+    // Parse CSV data into JSON arrays
+    const pilotData = Papa.parse(pilotCsvText, { header: true, skipEmptyLines: true, dynamicTyping: true }).data;
+    const caseyData = Papa.parse(caseyCsvText, { header: true, skipEmptyLines: true, dynamicTyping: true }).data;
 
-    const pilotLocations = pilotData.map((row) => ({
-      lat: parseFloat(row.Latitude),
-      lng: parseFloat(row.Longitude),
-      city: row.City,
-      state: row.St,
-      haulersPrice: parseFloat(row['HaulersPrice']),
-      type: 'Pilot',
-    }));
+    // Map Pilot data to desired structure
+    const pilotLocations = pilotData.map((row) => {
+      return {
+        locationNumberP: String(row['Location #']),
+        latP: parseFloat(row.Latitude),  // Changed to latP
+        lngP: parseFloat(row.Longitude), // Changed to lngP
+        cityP: row.City,
+        stateP: row.St,
+        haulersPriceP: parseFloat(row['HaulersPrice']),
+        typeP: 'Pilot',
+      };
+    });
 
-    const caseyLocations = caseyData.map((row) => ({
-      lat: parseFloat(row.Latitude),
-      lng: parseFloat(row.Longitude),
-      city: row.City,
-      state: row.St,
-      haulersPrice: parseFloat(row['HaulersPrice']),
-      type: 'Casey',
-    }));
+    // Map Casey data to desired structure
+    const caseyLocations = caseyData.map((row) => {
+      return {
+        locationNumberC: String(row['Location #']),
+        latC: parseFloat(row.Latitude),  // Changed to latC
+        lngC: parseFloat(row.Longitude), // Changed to lngC
+        cityC: row.City,
+        stateC: row.State,
+        haulersPriceC: parseFloat(row['HaulersPrice']),
+        typeC: 'Casey',
+      };
+    });
 
+    // Log the results
+    console.log("Pilot Locations (length):", pilotLocations.length);
+    console.log("Casey Locations (length):", caseyLocations.length);
+    console.log("Pilot Data Sample: ", JSON.stringify(pilotData[0]));  // Log first pilot entry
+    console.log("Casey Data Sample: ", JSON.stringify(caseyData[0]));  // Log first casey entry
+
+    // Combine the Pilot and Casey locations
     const allLocations = [...pilotLocations, ...caseyLocations];
-    return allLocations;
+    console.log("Total Locations (Pilot + Casey):", allLocations.length);
 
+    // Return all locations
+    return allLocations;
   } catch (error) {
     console.error("Error fetching locations:", error);
     return [];
   }
 }
+
+
+
+
 
 // This function initializes the map onto the page
 async function initMap() {
@@ -117,7 +141,7 @@ function onPlaceChangedEnd() {
   }
 }
 
-// This function creates the route from the start to the destination
+
 // This function creates the route from the start to the destination
 async function performRoute(geocoder, directionsService, directionsRenderer) {
   const start = document.getElementById("start").value;
@@ -131,23 +155,18 @@ async function performRoute(geocoder, directionsService, directionsRenderer) {
       travelMode: google.maps.TravelMode.DRIVING,
     };
 
-    try {
-      // Wait for the fast route to be calculated
-      const fastRouteResponse = await directionsService.route(fastRouteRequest);
-
-      // Display the fastest route
-      if (fastRouteResponse.status === "OK") {
-        directionsRenderer.setDirections(fastRouteResponse);
+    directionsService.route(fastRouteRequest, (result, status) => {
+      if (status === "OK") {
+        directionsRenderer.setDirections(result);
       } else {
-        alert("Fastest route request failed: " + fastRouteResponse.status);
+        alert("Route calculation failed: " + status);
       }
-    } catch (error) {
-      alert("Route calculation failed: " + error.message);
-    }
+    });
   } else {
     alert("Please enter both starting and destination addresses.");
   }
 }
+
 
 
 
@@ -194,38 +213,62 @@ async function performRoute(geocoder, directionsService, directionsRenderer) {
 // This function plots the fetched locations on the map
 function plotLocationsOnMap(map, locations) {
   locations.forEach((location) => {
-    if (location.lat && location.lng) {
+    // Plot Pilot locations
+    if (location.latP && location.lngP) {
       const marker = new google.maps.Marker({
-        position: { lat: location.lat, lng: location.lng },
+        position: { lat: location.latP, lng: location.lngP },
         map: map,
-        title: `${location.city}, ${location.state}`,
-        icon: location.type === 'Pilot'
-          ? {
-              url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
-              scaledSize: new google.maps.Size(32, 32),
-            }
-          : {
-              url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
-              scaledSize: new google.maps.Size(32, 32),
-            },
+        title: `${location.cityP}, ${location.stateP}`,
+        icon: {
+          url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
+          scaledSize: new google.maps.Size(32, 32),
+        },
       });
 
       const infoWindow = new google.maps.InfoWindow({
         content: `
-          <h3>${location.city}, ${location.state}</h3>
-          <p><strong>Haulers Price:</strong> $${location.haulersPrice.toFixed(2)}</p>
-          <p><strong>Type:</strong> ${location.type} Gas Station</p>
+          <h3>${location.cityP}, ${location.stateP}</h3>
+          <p><strong>Haulers Price:</strong> $${location.haulersPriceP.toFixed(2)}</p>
+          <p><strong>Type:</strong> ${location.typeP}</p> <!-- Using typeP -->
+          <p><strong>Location Number:</strong> ${location.locationNumberP}</p>
         `,
       });
 
       marker.addListener("click", () => {
         infoWindow.open(map, marker);
       });
-    } else {
-      console.warn("Invalid location data:", location);
+    }
+    
+    // Plot Casey locations
+    if (location.latC && location.lngC) {
+      const marker = new google.maps.Marker({
+        position: { lat: location.latC, lng: location.lngC },
+        map: map,
+        title: `${location.cityC}, ${location.stateC}`,
+        icon: {
+          url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+          scaledSize: new google.maps.Size(32, 32),
+        },
+      });
+
+      const infoWindow = new google.maps.InfoWindow({
+        content: `
+          <h3>${location.cityC}, ${location.stateC}</h3>
+          <p><strong>Haulers Price:</strong> $${location.haulersPriceC.toFixed(2)}</p>
+          <p><strong>Type:</strong> ${location.typeC}</p> <!-- Using typeC -->
+          <p><strong>Location Number:</strong> ${location.locationNumberC}</p>
+        `,
+      });
+
+      marker.addListener("click", () => {
+        infoWindow.open(map, marker);
+      });
     }
   });
 }
+
+
+
 
 // Initialize the map when the page loads
 window.onload = initMap;
