@@ -63,6 +63,7 @@ body {
   #discount-tool button {
     width: 60%;
     padding: 12px;
+    margin-bottom: 15px;
     font-size: 16px;
     font-weight: bold;
     background-color: #1A73E8;
@@ -82,4 +83,40 @@ body {
     width: 100%;
     height: 500px;
   }
+
+  #highlightedStationsList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0;
+    list-style-type: none;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  
+  .station-card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .station-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .station-card h4 {
+    margin: 0 0 5px 0;
+  }
+  
+  .station-card p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #555;
+  }
+  
   

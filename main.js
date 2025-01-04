@@ -2,12 +2,19 @@ let map;
 let autoCompleteStart;
 let autoCompleteEnd;
 let routeControl;
-
+let gasStationMarkers = [];
+let pilotMarkers = [];
+let caseyMarkers = [];
+let areStationsVisible = true;
+let directionsService = null; 
+let directionsRenderer = null;
+let directionsServiceReady = false;
+let isMapReady = false;
 
 // This function is for gathering information from the Google Sheets
 async function fetchLocations() {
   const pilotCSVUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTttM3XVDav2NLAIlSgDEbO7-gOVe6E3lGDau76EazO4iXTuswuhsfjgVWdE_tWIKMHmP6pTcL4s_0L/pub?output=csv';
-  const caseyCSVUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS54WS48Ol3EXpqVS-2Rw7ePnqwFcnkiVzfONIGxIJqpWuruNuphr_qhpNFbVgHVrchKyjkCBfjM_zK/pub?gid=1692662712&single=true&output=csv'; // Correct URL for Sheet 2 (Casey)
+  const caseyCSVUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS54WS48Ol3EXpqVS-2Rw7ePnqwFcnkiVzfONIGxIJqpWuruNuphr_qhpNFbVgHVrchKyjkCBfjM_zK/pub?gid=1692662712&single=true&output=csv';
 
   try {
     // Fetch Pilot data from Sheet 1
@@ -29,8 +36,8 @@ async function fetchLocations() {
     const pilotLocations = pilotData.map((row) => {
       return {
         locationNumberP: String(row['Location #']),
-        latP: parseFloat(row.Latitude),  // Changed to latP
-        lngP: parseFloat(row.Longitude), // Changed to lngP
+        latP: parseFloat(row.Latitude),
+        lngP: parseFloat(row.Longitude),
         cityP: row.City,
         stateP: row.St,
         haulersPriceP: parseFloat(row['HaulersPrice']),
@@ -42,8 +49,8 @@ async function fetchLocations() {
     const caseyLocations = caseyData.map((row) => {
       return {
         locationNumberC: String(row['Location #']),
-        latC: parseFloat(row.Latitude),  // Changed to latC
-        lngC: parseFloat(row.Longitude), // Changed to lngC
+        latC: parseFloat(row.Latitude),
+        lngC: parseFloat(row.Longitude),
         cityC: row.City,
         stateC: row.State,
         haulersPriceC: parseFloat(row['HaulersPrice']),
@@ -51,11 +58,13 @@ async function fetchLocations() {
       };
     });
 
+    
+
     // Log the results
     console.log("Pilot Locations (length):", pilotLocations.length);
     console.log("Casey Locations (length):", caseyLocations.length);
-    console.log("Pilot Data Sample: ", JSON.stringify(pilotData[0]));  // Log first pilot entry
-    console.log("Casey Data Sample: ", JSON.stringify(caseyData[0]));  // Log first casey entry
+    console.log("Pilot Data Sample: ", JSON.stringify(pilotData[0]));
+    console.log("Casey Data Sample: ", JSON.stringify(caseyData[0]));
 
     // Combine the Pilot and Casey locations
     const allLocations = [...pilotLocations, ...caseyLocations];
@@ -69,10 +78,6 @@ async function fetchLocations() {
   }
 }
 
-
-
-
-
 // This function initializes the map onto the page
 async function initMap() {
   const mapOptions = {
@@ -81,6 +86,7 @@ async function initMap() {
   };
 
   map = new google.maps.Map(document.getElementById("map"), mapOptions);
+  directionsService = new google.maps.DirectionsService();
 
   // Create the Autocomplete object for start address
   autoCompleteStart = new google.maps.places.Autocomplete(
@@ -95,17 +101,119 @@ async function initMap() {
   autoCompleteEnd.addListener("place_changed", onPlaceChangedEnd);
 
   const geocoder = new google.maps.Geocoder();
-  const directionsService = new google.maps.DirectionsService();
-  const directionsRenderer = new google.maps.DirectionsRenderer();
+  directionsService = new google.maps.DirectionsService();
+  directionsRenderer = new google.maps.DirectionsRenderer();
   directionsRenderer.setMap(map);
 
-  document.querySelector("button").addEventListener("click", () => {
-    performRoute(geocoder, directionsService, directionsRenderer);
+  console.log("DirectionsService initialized:", directionsService);
+  directionsServiceReady = true;
+  isMapReady = true;
+
+  document.addEventListener('DOMContentLoaded', () => {
+
+    // Add event listener for the "Calculate Route" button
+    document
+    .getElementById("calculateRoute")
+    .addEventListener("click", async () => {
+      console.log("directionsService on click:", directionsService);
+      if (directionsServiceReady) {
+        // Call performRoute after ensuring directionsService is initialized
+        await performRoute();
+      } else {
+        console.log("Directions Service is not initialized yet.");
+      }
+    });
+
+
+    
+    // Add event listener for the "Toggle Stations" button
+    document
+      .getElementById("toggleStations")
+      .addEventListener("click", toggleGasStations);
   });
 
   const locations = await fetchLocations();
   plotLocationsOnMap(map, locations);
 }
+
+async function highlightStationsAlongRoute(routePolyline) {
+  const bufferDistance = 5000; // 5 km buffer distance
+  const updatedMarkers = [];
+  const highlightedStations = [];
+
+  // Clear the highlighted stations list
+  const highlightedStationsContainer = document.getElementById("highlightedStationsList");
+  highlightedStationsContainer.innerHTML = "";
+
+  gasStationMarkers.forEach((marker) => {
+    const markerPosition = marker.getPosition();
+    let isNearRoute = false;
+
+    // Check if the marker is near the route
+    for (let i = 0; i < routePolyline.length - 1; i++) {
+      const segmentStart = routePolyline[i];
+      const segmentEnd = routePolyline[i + 1];
+
+      const distance = google.maps.geometry.spherical.computeDistanceBetween(
+        markerPosition,
+        segmentStart
+      );
+
+      if (distance <= bufferDistance) {
+        isNearRoute = true;
+        break;
+      }
+    }
+
+    // Highlight marker if near the route
+    if (isNearRoute) {
+      marker.setIcon({
+        url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png", // Highlighted icon
+        scaledSize: new google.maps.Size(32, 32),
+      });
+      updatedMarkers.push(marker);
+
+      // Extract station info
+      const stationType = marker.stationType; // Use the stationType property
+      const stationTitle = marker.getTitle();
+      const haulersPrice = marker.haulersPrice;
+
+      // Add station details to the list as a card
+      highlightedStations.push({ title: stationTitle, type: stationType, haulersPrice });
+
+      const stationCard = document.createElement("div");
+      stationCard.classList.add("station-card");
+
+      const stationDetails = `
+        <div>
+          <h4>${stationType} Station</h4>
+          <p>${stationTitle}</p>
+          <p><b>Hauler's Price:</b> $${haulersPrice.toFixed(2)}</p>
+        </div>
+      `;
+      stationCard.innerHTML = stationDetails;
+
+      // Add a click event to center map on this station
+      stationCard.addEventListener("click", () => {
+        map.setCenter(marker.getPosition());
+        map.setZoom(15);
+      });
+
+      highlightedStationsContainer.appendChild(stationCard);
+    } else {
+      marker.setIcon({
+        url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png", // Default icon
+        scaledSize: new google.maps.Size(32, 32),
+      });
+    }
+  });
+
+  console.log("Stations near the route:", updatedMarkers.length);
+  console.log("Highlighted Stations:", highlightedStations);
+}
+
+
+
 
 // Handle place change for the starting address
 function onPlaceChangedStart() {
@@ -141,81 +249,73 @@ function onPlaceChangedEnd() {
   }
 }
 
-
 // This function creates the route from the start to the destination
-async function performRoute(geocoder, directionsService, directionsRenderer) {
+async function performRoute() {
+  if (!isMapReady || !directionsService || !directionsRenderer) {
+    console.error("Map, DirectionsService, or DirectionsRenderer is not ready.");
+    return;
+  }
+
+  console.log("Button clicked, performing route calculation");
+
   const start = document.getElementById("start").value;
   const end = document.getElementById("end").value;
 
-  if (start && end) {
-    // Prepare the route request for the fastest route
-    const fastRouteRequest = {
-      origin: start,
-      destination: end,
-      travelMode: google.maps.TravelMode.DRIVING,
-    };
-
-    directionsService.route(fastRouteRequest, (result, status) => {
-      if (status === "OK") {
-        directionsRenderer.setDirections(result);
-      } else {
-        alert("Route calculation failed: " + status);
-      }
-    });
-  } else {
+  if (!start || !end) {
     alert("Please enter both starting and destination addresses.");
+    return;
+  }
+
+  const routeRequest = {
+    origin: start,
+    destination: end,
+    travelMode: google.maps.TravelMode.DRIVING,
+  };
+
+  try {
+    const result = await new Promise((resolve, reject) => {
+      directionsService.route(routeRequest, (response, status) => {
+        if (status === google.maps.DirectionsStatus.OK) {
+          resolve(response);
+        } else {
+          reject(status);
+        }
+      });
+    });
+
+    // Render the route on the map
+    directionsRenderer.setDirections(result);
+
+    // Retrieve the route polyline
+    const routePolyline = result.routes[0].overview_path;
+
+    // Highlight gas stations near the route
+    await highlightStationsAlongRoute(routePolyline);
+
+    console.log("Route successfully created.");
+  } catch (error) {
+    console.error("Error calculating route:", error);
+    alert("Route calculation failed: " + error);
   }
 }
 
 
-
-
-
-
-
-// Function to find the closest and cheapest gas station to the start point
-// function findClosestAndCheapestGasStation(locations, start) {
-//   const startLatLng = new google.maps.LatLng(start);
-//   console.log('Start LatLng:', startLatLng);
-//   let closestStation = null;
-//   let minDistance = Infinity;
-//   let minPrice = Infinity;
-
-//   locations.forEach((location) => {
-//     console.log('Location:', location);
-//     console.log('Checking if haulersPrice < minPrice:', location.haulersPrice, '<', minPrice);
-//     if (typeof location.lat === 'number' && typeof location.lng === 'number' && !isNaN(location.haulersPrice)) {
-//       console.log('Latitude:', location.lat);
-//       console.log('Longitude:', location.lng);
-//       const stationLatLng = new google.maps.LatLng(location.lat, location.lng);
-
-//       console.log('Station LatLng:', stationLatLng);
-//       const distance = google.maps.geometry.spherical.computeDistanceBetween(startLatLng, stationLatLng);
-//       console.log('Distance:', distance);
-//       if (distance < minDistance) {
-//         minDistance = distance;
-//         closestStation = stationLatLng;
-//         minPrice = location.haulersPrice;
-//       }
-//     } else {
-//       console.error('Invalid LatLng data:', location.lat, location.lng);
-//     }
-    
-//   });
-  
-
-//   console.log('Closest station found:', closestStation);  // Add this line to debug
-//   return closestStation;
-// }
-
-
-
-// This function plots the fetched locations on the map
 function plotLocationsOnMap(map, locations) {
-  locations.forEach((location) => {
-    // Plot Pilot locations
+  clearMarkers(gasStationMarkers);
+  gasStationMarkers = []; // Reset the array
+
+  locations.forEach((location, index) => {
+    if (!location.latP || !location.lngP) {
+      console.log(`Skipping Pilot location at index ${index}:`, location);
+    }
+
+    if (!location.latC || !location.lngC) {
+      console.log(`Skipping Casey location at index ${index}:`, location);
+    }
+
+    // Add Pilot marker
     if (location.latP && location.lngP) {
-      const marker = new google.maps.Marker({
+      const pilotMarker = new google.maps.Marker({
         position: { lat: location.latP, lng: location.lngP },
         map: map,
         title: `${location.cityP}, ${location.stateP}`,
@@ -225,23 +325,29 @@ function plotLocationsOnMap(map, locations) {
         },
       });
 
-      const infoWindow = new google.maps.InfoWindow({
+      const pilotInfoWindow = new google.maps.InfoWindow({
         content: `
-          <h3>${location.cityP}, ${location.stateP}</h3>
-          <p><strong>Haulers Price:</strong> $${location.haulersPriceP.toFixed(2)}</p>
-          <p><strong>Type:</strong> ${location.typeP}</p> <!-- Using typeP -->
-          <p><strong>Location Number:</strong> ${location.locationNumberP}</p>
+          <div>
+            <h3>Pilot Station</h3>
+            <p><b>City:</b> ${location.cityP}</p>
+            <p><b>State:</b> ${location.stateP}</p>
+            <p><b>Hauler's Price:</b> $${location.haulersPriceP}</p>
+          </div>
         `,
       });
 
-      marker.addListener("click", () => {
-        infoWindow.open(map, marker);
+      pilotMarker.addListener("click", () => {
+        pilotInfoWindow.open(map, pilotMarker);
       });
+
+      pilotMarker.stationType = "Pilot";
+      pilotMarker.haulersPrice = location.haulersPriceP;
+      gasStationMarkers.push(pilotMarker);
     }
-    
-    // Plot Casey locations
+
+    // Add Casey marker
     if (location.latC && location.lngC) {
-      const marker = new google.maps.Marker({
+      const caseyMarker = new google.maps.Marker({
         position: { lat: location.latC, lng: location.lngC },
         map: map,
         title: `${location.cityC}, ${location.stateC}`,
@@ -251,24 +357,62 @@ function plotLocationsOnMap(map, locations) {
         },
       });
 
-      const infoWindow = new google.maps.InfoWindow({
+      const caseyInfoWindow = new google.maps.InfoWindow({
         content: `
-          <h3>${location.cityC}, ${location.stateC}</h3>
-          <p><strong>Haulers Price:</strong> $${location.haulersPriceC.toFixed(2)}</p>
-          <p><strong>Type:</strong> ${location.typeC}</p> <!-- Using typeC -->
-          <p><strong>Location Number:</strong> ${location.locationNumberC}</p>
+          <div>
+            <h3>Casey Station</h3>
+            <p><b>City:</b> ${location.cityC}</p>
+            <p><b>State:</b> ${location.stateC}</p>
+            <p><b>Hauler's Price:</b> $${location.haulersPriceC}</p>
+          </div>
         `,
       });
 
-      marker.addListener("click", () => {
-        infoWindow.open(map, marker);
+      caseyMarker.addListener("click", () => {
+        caseyInfoWindow.open(map, caseyMarker);
       });
+
+      caseyMarker.stationType = "Casey";
+      caseyMarker.haulersPrice = location.haulersPriceC;
+      gasStationMarkers.push(caseyMarker);
     }
   });
+
+  gasStationMarkers.forEach((marker, index) => {
+    console.log(`Marker ${index} map:`, marker.getMap());
+    console.log(`Marker ${index} visibility:`, marker.getVisible());
+  });
+
+  console.log("Total Markers Plotted:", gasStationMarkers.length);
+}
+
+
+
+function clearMarkers(markerArray) {
+  markerArray.forEach(marker => marker.setMap(null)); // Remove markers from map
+  markerArray.length = 0; // Clear the array
+}
+
+
+// Toggle the visibility of gas station markers
+function toggleGasStations() {
+  areStationsVisible = !areStationsVisible; // Toggle visibility state
+
+  gasStationMarkers.forEach((marker, index) => {
+    marker.setVisible(areStationsVisible); // Update visibility for all markers
+    console.log(`Marker ${index} visibility set to:`, areStationsVisible);
+  });
+
+  // Update button text
+  const toggleButton = document.getElementById("toggleStations");
+  toggleButton.textContent = areStationsVisible ? "Hide All Stations" : "Show All Stations";
+
+  console.log(`Gas stations are now ${areStationsVisible ? "visible" : "hidden"}.`);
 }
 
 
 
 
-// Initialize the map when the page loads
-window.onload = initMap;
+
+// Initialize the map once the page is loaded
+window.addEventListener('load', initMap);

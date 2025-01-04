@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Discount Lookup Tool</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+  
+
 </head>
 <body>
   <div id="logo-container">
     <a id="HaulersUnitedLogo" href="https://haulersunited.squarespace.com/" target="_blank">
-      <img src="assets/Haulers United Navy On White Logo.jpg" alt="Haulers United Logo and Link Back to Website">
+      <img src="assets/logo wordmark HU 3 no back.png" alt="Haulers United Logo and Link Back to Website">
     </a>
   </div>
   <div id="tool-container">
@@ -27,7 +27,14 @@
           <input type="text" id="end" placeholder="Enter destination address" />
         </div>
       </div>
-      <button onclick="performRoute()">Route</button>
+      <button onclick="performRoute()" id="calculateRoute">Route</button>
+      <div id="station-toggle">
+        <button onclick="toggleGasStations()" id="toggleStations">Hide All Stations</button>
+      </div>
+      <div id="highlightedStationsContainer">
+        <h3>Stations Near Route:</h3>
+        <ul id="highlightedStationsList"></ul>
+      </div>
     </div>
     <div id="map-container">
       <div id="map" style="height: 500px; width: 100%;"></div>
@@ -37,13 +44,11 @@
 
   <!-- Google Maps API -->
   <script 
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYpNJXRFRuQq5IV8LQZi8E90r1gIaiORI&libraries=places" 
-    async 
-    defer>
+    async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYpNJXRFRuQq5IV8LQZi8E90r1gIaiORI&libraries=places,geometry&callback=initMap">
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
   <script src="main.js"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDYpNJXRFRuQq5IV8LQZi8E90r1gIaiORI&libraries=places&callback=initMap" async defer></script>
+ 
 
 </body>
 </html>
