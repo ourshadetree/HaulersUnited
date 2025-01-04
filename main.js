@@ -201,8 +201,14 @@ async function highlightStationsAlongRoute(routePolyline) {
 
       highlightedStationsContainer.appendChild(stationCard);
     } else {
+      // Set default icon based on station type
+      const defaultIconUrl =
+        marker.stationType === "Pilot"
+          ? "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
+          : "http://maps.google.com/mapfiles/ms/icons/blue-dot.png";
+
       marker.setIcon({
-        url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png", // Default icon
+        url: defaultIconUrl, // Default icon based on type
         scaledSize: new google.maps.Size(32, 32),
       });
     }
@@ -211,6 +217,7 @@ async function highlightStationsAlongRoute(routePolyline) {
   console.log("Stations near the route:", updatedMarkers.length);
   console.log("Highlighted Stations:", highlightedStations);
 }
+
 
 
 
