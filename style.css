@@ -8,19 +8,22 @@ body {
   flex-direction: column;
   gap: 20px;
   align-items: center;
+  box-sizing: border-box;
 }
 
 /* Logo Container */
 #logo-container {
   text-align: center;
+  width: 100%; /* Ensure it doesn't overflow */
+  padding: 10px 0;
 }
 
-#HaulersUnitedLogo {
+#HaulersUnitedLogo img {
+  width: 100%; /* Make the image responsive */
+  max-width: 150px; /* Restrict maximum size */
+  height: auto; /* Maintain aspect ratio */
   display: block;
   margin: 0 auto;
-  width: 100%; /* Ensure the image is responsive */
-  max-width: 200px; /* Adjust the max width for smaller screens */
-  height: auto; /* Maintain aspect ratio */
 }
 
 /* Tool Container */
@@ -31,19 +34,21 @@ body {
   gap: 20px;
   justify-content: center;
   width: 100%;
-  max-width: 1200px; /* Restrict maximum width */
+  max-width: 1200px; /* Restrict maximum width for larger screens */
   padding: 20px;
   box-sizing: border-box;
 }
 
 #discount-tool {
-  width: 40%;
+  flex: 1;
+  max-width: 600px; /* Ensure it doesn't overflow */
   text-align: center;
   border: 2px solid #1A73E8;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0px 10px 20px rgba(26, 115, 232, 0.3);
   background-color: white;
+  box-sizing: border-box;
 }
 
 #discount-tool h2 {
@@ -60,7 +65,7 @@ body {
 }
 
 #route-addresses input {
-  width: 80%;
+  width: 100%; /* Full width within the tool */
   padding: 10px;
   font-size: 16px;
   border: 2px solid #1A73E8;
@@ -69,7 +74,7 @@ body {
 }
 
 #discount-tool button {
-  width: 60%;
+  width: 100%; /* Full width for better usability */
   padding: 12px;
   margin-bottom: 15px;
   font-size: 16px;
@@ -87,14 +92,15 @@ body {
 
 /* Map Container */
 #map-container {
-  flex-grow: 1;
-  width: 55%;
+  flex: 1;
+  max-width: 600px; /* Ensure it doesn't overflow */
   height: 500px;
 }
 
 #map {
   width: 100%;
   height: 100%;
+  border-radius: 10px;
 }
 
 /* Highlighted Stations List */
@@ -138,77 +144,45 @@ body {
 /* For small devices (phones) */
 @media (max-width: 600px) {
   body {
-    gap: 10px;
     padding: 10px;
+    gap: 10px;
   }
 
   /* Adjust logo size */
-  #HaulersUnitedLogo {
-    max-width: 150px; /* Smaller image on mobile */
+  #HaulersUnitedLogo img {
+    max-width: 120px; /* Smaller logo for mobile */
   }
 
-  /* Stack the tool and map */
+  /* Stack tool and map */
   #tool-container {
     flex-direction: column; /* Stack elements vertically */
-    padding: 10px;
-    gap: 15px; /* Add some spacing between the tool and map */
+    gap: 15px; /* Add spacing between tool and map */
+    padding: 0; /* Remove extra padding */
   }
 
   /* Make tool and map take full width */
   #discount-tool, #map-container {
     width: 100%;
+    max-width: 100%;
   }
 
   /* Adjust map height */
   #map-container {
-    height: 400px; /* Slightly smaller height on mobile */
+    height: 400px;
   }
 
   /* Adjust button and input sizes for mobile */
   #discount-tool button {
-    width: 100%;
     font-size: 14px;
     padding: 10px;
   }
 
   #route-addresses input {
-    width: 100%;
     font-size: 14px;
   }
 
   /* Highlighted Stations List */
   #highlightedStationsList {
     max-height: 200px;
-  }
-}
-
-/* For medium devices (tablets) */
-@media (max-width: 768px) {
-  #tool-container {
-    flex-direction: column;
-    padding: 15px;
-  }
-
-  #discount-tool, #map-container {
-    width: 100%;
-  }
-
-  #map-container {
-    height: 450px;
-  }
-}
-
-/* For large devices (desktops) */
-@media (min-width: 769px) {
-  #tool-container {
-    flex-direction: row;
-  }
-
-  #discount-tool {
-    width: 30%;
-  }
-
-  #map-container {
-    width: 70%;
   }
 }
