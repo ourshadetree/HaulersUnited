@@ -1,122 +1,215 @@
+/* Base Styles */
 body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    padding: 0;
-    background-color: #f5f5f5;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    align-items: center;
-  }
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
 
-  #logo-container {
-    text-align: center;
-  }
+#logo-container {
+  text-align: center;
+}
 
-  #HaulersUnitedLogo {
-    display: block;
-    margin: 0 auto;
+#HaulersUnitedLogo {
+  display: block;
+  margin: 0 auto;
+}
+
+/* Tool Container */
+#tool-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 20px;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px; /* Restrict maximum width */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+#discount-tool {
+  width: 40%;
+  text-align: center;
+  border: 2px solid #1A73E8;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 10px 20px rgba(26, 115, 232, 0.3);
+  background-color: white;
+}
+
+#discount-tool h2 {
+  color: #1A73E8;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+#route-addresses label {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+#route-addresses input {
+  width: 80%;
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #1A73E8;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+#discount-tool button {
+  width: 60%;
+  padding: 12px;
+  margin-bottom: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: #1A73E8;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#discount-tool button:hover {
+  background-color: #155bb5;
+}
+
+/* Map Container */
+#map-container {
+  flex-grow: 1;
+  width: 55%;
+  height: 500px;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+/* Highlighted Stations List */
+#highlightedStationsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0;
+  list-style-type: none;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.station-card {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.station-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.station-card h4 {
+  margin: 0 0 5px 0;
+}
+
+.station-card p {
+  margin: 0;
+  font-size: 0.9em;
+  color: #555;
+}
+
+/* Media Queries */
+
+/* For small devices (phones) */
+@media (max-width: 600px) {
+  body {
+    gap: 10px;
+    padding: 10px;
   }
 
   #tool-container {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 20px;
-    justify-content: center;
-    width: 100%;
-  }
-  
-  #discount-tool {
-    width: 50%;
-    margin: 20px auto;
-    text-align: center;
-    border: 2px solid #1A73E8;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 10px 20px rgba(26, 115, 232, 0.3);
-    background-color: white;
-  }
-  
-  #discount-tool h2 {
-    color: #1A73E8;
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-  
-  #route-addresses label {
-    display: block;
-    font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-  
-  #route-addresses input {
-    width: 80%;
+    flex-direction: column;
     padding: 10px;
-    font-size: 16px;
-    border: 2px solid #1A73E8;
-    border-radius: 5px;
-    margin-bottom: 20px;
   }
-  
-  #discount-tool button {
-    width: 60%;
-    padding: 12px;
-    margin-bottom: 15px;
-    font-size: 16px;
-    font-weight: bold;
-    background-color: #1A73E8;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  #map-container {
-    margin-top: 20px;
-    width: 60%;
-    height: 500px;
-  }
-  
-  #map {
+
+  #discount-tool, #map-container {
     width: 100%;
-    height: 500px;
+  }
+
+  #discount-tool {
+    padding: 15px;
+  }
+
+  #map-container {
+    height: 400px;
+  }
+
+  #discount-tool button {
+    width: 100%;
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  #route-addresses input {
+    width: 100%;
+    font-size: 14px;
   }
 
   #highlightedStationsList {
-    display: flex;
+    max-height: 200px;
+  }
+}
+
+/* For medium devices (tablets) */
+@media (max-width: 768px) {
+  #tool-container {
     flex-direction: column;
-    gap: 10px;
-    padding: 0;
-    list-style-type: none;
-    max-height: 300px;
-    overflow-y: auto;
+    padding: 15px;
   }
-  
-  .station-card {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  #discount-tool, #map-container {
+    width: 100%;
   }
-  
-  .station-card:hover {
-    transform: scale(1.02);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+
+  #discount-tool {
+    padding: 20px;
   }
-  
-  .station-card h4 {
-    margin: 0 0 5px 0;
+
+  #map-container {
+    height: 450px;
   }
-  
-  .station-card p {
-    margin: 0;
-    font-size: 0.9em;
-    color: #555;
+
+  #discount-tool button {
+    width: 80%;
   }
-  
-  
+
+  #route-addresses input {
+    width: 90%;
+  }
+}
+
+/* For large devices (desktops) */
+@media (min-width: 769px) {
+  #tool-container {
+    flex-direction: row;
+  }
+
+  #discount-tool {
+    width: 30%;
+  }
+
+  #map-container {
+    width: 70%;
+  }
+}
