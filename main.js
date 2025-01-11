@@ -13,7 +13,7 @@ let isMapReady = false;
 
 // This function is for gathering information from the Google Sheets
 async function fetchLocations() {
-  const pilotCSVUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTttM3XVDav2NLAIlSgDEbO7-gOVe6E3lGDau76EazO4iXTuswuhsfjgVWdE_tWIKMHmP6pTcL4s_0L/pub?output=csv';
+  const pilotCSVUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS54WS48Ol3EXpqVS-2Rw7ePnqwFcnkiVzfONIGxIJqpWuruNuphr_qhpNFbVgHVrchKyjkCBfjM_zK/pub?gid=606915630&single=true&output=csv';
   const caseyCSVUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS54WS48Ol3EXpqVS-2Rw7ePnqwFcnkiVzfONIGxIJqpWuruNuphr_qhpNFbVgHVrchKyjkCBfjM_zK/pub?gid=1692662712&single=true&output=csv';
 
   try {
@@ -33,17 +33,30 @@ async function fetchLocations() {
     const caseyData = Papa.parse(caseyCsvText, { header: true, skipEmptyLines: true, dynamicTyping: true }).data;
 
     // Map Pilot data to desired structure
-    const pilotLocations = pilotData.map((row) => {
-      return {
-        locationNumberP: String(row['Location #']),
-        latP: parseFloat(row.Latitude),
-        lngP: parseFloat(row.Longitude),
-        cityP: row.City,
-        stateP: row.St,
-        haulersPriceP: parseFloat(row['HaulersPrice']),
-        typeP: 'Pilot',
-      };
-    });
+    const pilotLocations = pilotData
+      .filter((row) => {
+        // Check if any of the price fields contain "Out of Network"
+        return (
+          row["Today's Price"] !== "Out of Network" &&
+          row['Retail Price'] !== "Out of Network" &&
+          row["Tomorrow's Price"] !== "Out of Network"
+        );
+      })
+      .map((row) => {
+        return {
+          locationNumberP: String(row['Location #']),
+          latP: parseFloat(row.Latitude),
+          lngP: parseFloat(row.Longitude),
+          cityP: row.City,
+          stateP: row['State/Province'],
+          haulersPriceP: parseFloat(row['HaulersPrice']),
+          todaysPriceP: parseFloat(row["Today's Price"]?.replace('$', '')), // Remove $ before parsing
+          retailPriceP: parseFloat(row['Retail Price']?.replace('$', '')), // Remove $ before parsing
+          tomorrowPriceP: parseFloat(row["Tomorrow's Price"]?.replace('$', '')), // Remove $ before parsing
+          hyperlinkP: row.Hyperlink, // Add the hyperlink value
+          typeP: 'Pilot',
+        };
+      });
 
     // Map Casey data to desired structure
     const caseyLocations = caseyData.map((row) => {
@@ -54,6 +67,8 @@ async function fetchLocations() {
         cityC: row.City,
         stateC: row.State,
         haulersPriceC: parseFloat(row['HaulersPrice']),
+        todaysPriceC: parseFloat(row["Today'sPrice"]?.replace('$', '')), // Remove $ before parsing
+        tomorrowPriceC: parseFloat(row["Tomorrow'sPrice"]?.replace('$', '')), // Remove $ before parsing
         typeC: 'Casey',
       };
     });
@@ -265,19 +280,26 @@ async function performRoute() {
 
   console.log("Button clicked, performing route calculation");
 
-  const start = document.getElementById("start").value;
-  const end = document.getElementById("end").value;
+  const start = document.getElementById("start").value.trim();
+  const end = document.getElementById("end").value.trim();
 
-  if (!start || !end) {
-    alert("Please enter both starting and destination addresses.");
+  if (!start && !end) {
+    alert("Please enter at least one address.");
     return;
   }
 
+  // Determine route configuration
   const routeRequest = {
-    origin: start,
-    destination: end,
+    origin: start || end, // Use start address if provided, otherwise use end
+    destination: end || start, // Use end address if provided, otherwise use start
     travelMode: google.maps.TravelMode.DRIVING,
   };
+
+  // If only one address is provided, make the route loop back to the same point
+  if (!start || !end) {
+    routeRequest.destination = routeRequest.origin; // Loop back to the same address
+    alert("Only one address provided. Creating a route that loops back to the same location.");
+  }
 
   try {
     const result = await new Promise((resolve, reject) => {
@@ -307,6 +329,7 @@ async function performRoute() {
 }
 
 
+
 function plotLocationsOnMap(map, locations) {
   clearMarkers(gasStationMarkers);
   gasStationMarkers = []; // Reset the array
@@ -328,7 +351,7 @@ function plotLocationsOnMap(map, locations) {
         title: `${location.cityP}, ${location.stateP}`,
         icon: {
           url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
-          scaledSize: new google.maps.Size(32, 32),
+          scaledSize: new google.maps.Size(16, 16),
         },
       });
 
@@ -339,6 +362,10 @@ function plotLocationsOnMap(map, locations) {
             <p><b>City:</b> ${location.cityP}</p>
             <p><b>State:</b> ${location.stateP}</p>
             <p><b>Hauler's Price:</b> $${location.haulersPriceP}</p>
+            <p><b>Today's Price:</b> $${location.todaysPriceP}</p>
+            <p><b>Retail Price:</b> $${location.retailPriceP}</p>
+            <p><b>Tomorrow's Price:</b> $${location.tomorrowPriceP}</p>
+            <p><a href="${location.hyperLinkP}" target="_blank">Station Website</a></p>
           </div>
         `,
       });
@@ -360,7 +387,7 @@ function plotLocationsOnMap(map, locations) {
         title: `${location.cityC}, ${location.stateC}`,
         icon: {
           url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
-          scaledSize: new google.maps.Size(32, 32),
+          scaledSize: new google.maps.Size(16, 16),
         },
       });
 
@@ -371,6 +398,8 @@ function plotLocationsOnMap(map, locations) {
             <p><b>City:</b> ${location.cityC}</p>
             <p><b>State:</b> ${location.stateC}</p>
             <p><b>Hauler's Price:</b> $${location.haulersPriceC}</p>
+            <p><b>Today's Price:</b> $${location.todaysPriceC}</p>
+            <p><b>Tomorrow's Price:</b> $${location.tomorrowPriceC}</p>
           </div>
         `,
       });

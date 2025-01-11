@@ -1,4 +1,7 @@
 /* General Styles */
+html, body {
+  min-height: 120vh;
+}
 body {
   font-family: Arial, sans-serif;
   margin: 0;
