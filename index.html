@@ -15,23 +15,48 @@
   <div id="tool-container">
     <div id="discount-tool">
       <h2>Discount Lookup Tool</h2>
-      <div id="route-addresses">
-        <div>
-          <label for="start">Starting Address:</label>
-          <input type="text" id="start" placeholder="Enter starting address" />
-        </div>
-        <div>
-          <label for="end">Destination Address:</label>
-          <input type="text" id="end" placeholder="Enter destination address" />
-        </div>
+
+      <!-- Dropdown for tool selection -->
+      <div id="tool-selection">
+        <label for="toolType">Choose Tool:</label>
+        <select id="toolType" onchange="updateToolType()">
+          <option value="">Select</option>
+          <option value="singleAddress">Single Address</option>
+          <option value="createRoute">Create Route</option>
+        </select>
       </div>
-      <button onclick="performRoute()" id="calculateRoute">Route</button>
-      <div id="station-toggle">
-        <button onclick="toggleGasStations()" id="toggleStations">Hide All Stations</button>
+
+      <!-- Single Address Tool (Hidden by default) -->
+      <div id="singleAddressTool" style="display: none;">
+        <h3>Single Address Lookup</h3>
+        <label for="singleAddressInput">Enter Address:</label>
+        <input type="text" id="singleAddressInput" name="no-autocomplete" placeholder="Enter the address" autocomplete="new-password"/>
+        <button onclick="findStationsForSingleAddress()" id="findStations">Find Gas Stations</button>
       </div>
-      <div id="highlightedStationsContainer">
+
+      <!-- Create Route Tool (Hidden by default) -->
+      <div id="routeTool" style="display: none;">
+        <h3>Create Route</h3>
+        <div id="route-addresses">
+          <div>
+            <label for="start">Starting Address:</label>
+            <input type="text" id="start" placeholder="Enter starting address" />
+          </div>
+          <div>
+            <label for="end">Destination Address:</label>
+            <input type="text" id="end" placeholder="Enter destination address" />
+          </div>
+        </div>
+        <button onclick="performRoute()" id="calculateRoute">Route</button>
+        
+      </div>
+
+      <div id="highlightedStationsContainer" style="display: none;">
         <h3>Stations Near Route:</h3>
         <ul id="highlightedStationsList"></ul>
+      </div>
+      <div id="station-toggle">
+        <button onclick="toggleGasStations()" id="toggleStations">Hide All Stations</button>
       </div>
     </div>
     <div id="map-container">

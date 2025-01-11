@@ -21,6 +21,66 @@ body {
   padding: 10px 0;
 }
 
+/* Tool Selection */
+#tool-selection {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#tool-selection label {
+  display: block;
+  font-size: 16px;
+  font-weight: bold;
+  color: #1A73E8;
+  margin-bottom: 10px;
+}
+
+#tool-selection select {
+  width: 100%;
+  max-width: 300px;
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #1A73E8;
+  border-radius: 5px;
+  background-color: white;
+  color: #333;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  appearance: none; /* Remove default browser styles */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%231A73E8' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px 12px;
+}
+
+#tool-selection select:hover {
+  border-color: #155bb5;
+}
+
+#tool-selection select:focus {
+  outline: none;
+  border-color: #155bb5;
+  box-shadow: 0 0 5px rgba(26, 115, 232, 0.5);
+}
+
+#singleAddressInput {
+  width: calc(100% - 20px); /* Adjust for padding and borders */
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #1A73E8;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  background-color: white;
+}
+
+#singleAddressInput:focus {
+  outline: none;
+  border-color: #155bb5;
+  box-shadow: 0 0 5px rgba(26, 115, 232, 0.5);
+}
+
+
 #HaulersUnitedLogo img {
   width: 100%; /* Make the image responsive */
   max-width: 150px; /* Restrict maximum size */
