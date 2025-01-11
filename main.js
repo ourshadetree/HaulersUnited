@@ -65,7 +65,6 @@ async function fetchLocations() {
         lngC: parseFloat(row.Longitude),
         cityC: row.City,
         stateC: row.State,
-        haulersPriceC: parseFloat(row['HaulersPrice']),
         todaysPriceC: parseFloat(row["Today'sPrice"]?.replace('$', '')), // Remove $ before parsing
         tomorrowPriceC: parseFloat(row["Tomorrow'sPrice"]?.replace('$', '')), // Remove $ before parsing
         typeC: 'Casey',
@@ -394,7 +393,6 @@ function plotLocationsOnMap(map, locations) {
             <h3>Casey Station</h3>
             <p><b>City:</b> ${location.cityC}</p>
             <p><b>State:</b> ${location.stateC}</p>
-            <p><b>Hauler's Price:</b> $${location.haulersPriceC}</p>
             <p><b>Today's Price:</b> $${location.todaysPriceC}</p>
             <p><b>Tomorrow's Price:</b> $${location.tomorrowPriceC}</p>
           </div>
@@ -406,7 +404,6 @@ function plotLocationsOnMap(map, locations) {
       });
 
       caseyMarker.stationType = "Casey";
-      caseyMarker.haulersPrice = location.haulersPriceC;
       gasStationMarkers.push(caseyMarker);
     }
   });
