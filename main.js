@@ -49,7 +49,6 @@ async function fetchLocations() {
           lngP: parseFloat(row.Longitude),
           cityP: row.City,
           stateP: row['State/Province'],
-          haulersPriceP: parseFloat(row['HaulersPrice']),
           todaysPriceP: parseFloat(row["Today's Price"]?.replace('$', '')), // Remove $ before parsing
           retailPriceP: parseFloat(row['Retail Price']?.replace('$', '')), // Remove $ before parsing
           tomorrowPriceP: parseFloat(row["Tomorrow's Price"]?.replace('$', '')), // Remove $ before parsing
@@ -361,7 +360,6 @@ function plotLocationsOnMap(map, locations) {
             <h3>Pilot Station</h3>
             <p><b>City:</b> ${location.cityP}</p>
             <p><b>State:</b> ${location.stateP}</p>
-            <p><b>Hauler's Price:</b> $${location.haulersPriceP}</p>
             <p><b>Today's Price:</b> $${location.todaysPriceP}</p>
             <p><b>Retail Price:</b> $${location.retailPriceP}</p>
             <p><b>Tomorrow's Price:</b> $${location.tomorrowPriceP}</p>
@@ -375,7 +373,6 @@ function plotLocationsOnMap(map, locations) {
       });
 
       pilotMarker.stationType = "Pilot";
-      pilotMarker.haulersPrice = location.haulersPriceP;
       gasStationMarkers.push(pilotMarker);
     }
 
