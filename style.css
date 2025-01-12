@@ -1,11 +1,11 @@
 /* General Styles */
 html, body {
   min-height: 120vh;
+  margin: 0;
+  padding: 0;
 }
 body {
   font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
   background-color: #f5f5f5;
   display: flex;
   flex-direction: column;
@@ -14,14 +14,139 @@ body {
   box-sizing: border-box;
 }
 
-/* Logo Container */
-#logo-container {
-  text-align: center;
+/* Navbar Styles */
+#navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  padding: 10px 0;
+  height: 80px;
+  background-color: #1A73E8;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  color: white;
+  box-sizing: border-box;
 }
 
-/* Tool Selection */
+#navbar #logo-container {
+  display: flex;
+  align-items: center;
+}
+
+#navbar #logo-container img {
+  max-width: 250px; /* Adjusted size */
+  height: auto;
+}
+
+#nav-links {
+  display: flex;
+  gap: 20px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+#nav-links a {
+  text-decoration: none;
+}
+
+#nav-links a button {
+  padding: 8px 16px;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: white;
+  color: #1A73E8;
+  border: 2px solid #1A73E8;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+#nav-links a button:hover {
+  background-color: #155bb5; /* Slightly darker blue */
+  color: white; /* Change text to white */
+  border-color: #155bb5; /* Match hover background */
+}
+
+/* Tool Container */
+#tool-container {
+  margin-top: 100px; /* Adjust to account for the fixed navbar */
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 20px;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px; /* Restrict maximum width for larger screens */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+#discount-tool {
+  flex: 1;
+  max-width: 600px;
+  text-align: center;
+  border: 2px solid #1A73E8;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 10px 20px rgba(26, 115, 232, 0.3);
+  background-color: white;
+  box-sizing: border-box;
+  overflow: hidden; /* Prevent content overflow */
+}
+
+#discount-tool h2 {
+  color: #1A73E8;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Buttons */
+#discount-tool button,
+#station-toggle button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: #1A73E8;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#discount-tool button:hover,
+#station-toggle button:hover {
+  background-color: #155bb5;
+  box-shadow: 0 4px 8px rgba(26, 115, 232, 0.5);
+}
+
+/* Input Fields */
+#discount-tool input[type="text"],
+#route-addresses input {
+  width: calc(100% - 20px); /* Adjust for padding and borders */
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #1A73E8;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  background-color: white;
+}
+
+#discount-tool input[type="text"]:focus,
+#route-addresses input:focus {
+  outline: none;
+  border-color: #155bb5;
+  box-shadow: 0 0 5px rgba(26, 115, 232, 0.5);
+}
+
+/* Tool Selection Styles */
 #tool-selection {
   text-align: center;
   margin-bottom: 20px;
@@ -63,104 +188,6 @@ body {
   box-shadow: 0 0 5px rgba(26, 115, 232, 0.5);
 }
 
-#singleAddressInput {
-  width: calc(100% - 20px); /* Adjust for padding and borders */
-  padding: 10px;
-  font-size: 16px;
-  border: 2px solid #1A73E8;
-  border-radius: 5px;
-  margin-bottom: 20px;
-  box-sizing: border-box;
-  background-color: white;
-}
-
-#singleAddressInput:focus {
-  outline: none;
-  border-color: #155bb5;
-  box-shadow: 0 0 5px rgba(26, 115, 232, 0.5);
-}
-
-
-#HaulersUnitedLogo img {
-  width: 100%; /* Make the image responsive */
-  max-width: 150px; /* Restrict maximum size */
-  height: auto; /* Maintain aspect ratio */
-  display: block;
-  margin: 0 auto;
-}
-
-@media (max-width: 600px) {
-  #HaulersUnitedLogo img {
-    max-width: 100px; /* Smaller logo for mobile */
-  }
-}
-
-/* Tool Container */
-#tool-container {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 20px;
-  justify-content: center;
-  width: 100%;
-  max-width: 1200px; /* Restrict maximum width for larger screens */
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-#discount-tool {
-  flex: 1;
-  max-width: 600px;
-  text-align: center;
-  border: 2px solid #1A73E8;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 10px 20px rgba(26, 115, 232, 0.3);
-  background-color: white;
-  box-sizing: border-box;
-  overflow: hidden; /* Prevent content overflow */
-}
-
-#discount-tool h2 {
-  color: #1A73E8;
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-#route-addresses label {
-  display: block;
-  font-size: 14px;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-#route-addresses input {
-  width: calc(100% - 20px); /* Adjust for padding and borders */
-  padding: 10px;
-  font-size: 16px;
-  border: 2px solid #1A73E8;
-  border-radius: 5px;
-  margin-bottom: 20px;
-  box-sizing: border-box;
-}
-
-#discount-tool button {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 15px;
-  font-size: 16px;
-  font-weight: bold;
-  background-color: #1A73E8;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-#discount-tool button:hover {
-  background-color: #155bb5;
-}
-
 /* Map Container */
 #map-container {
   flex: 1;
@@ -192,12 +219,14 @@ body {
   background-color: #f9f9f9;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
 
 .station-card:hover {
-  transform: scale(1.02);
+  transform: scale(1.02); /* Slightly enlarge on hover */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  background-color: #ccc; /* Fill background with grey */
+  color: white; /* Change text to white */
 }
 
 .station-card h4 {
@@ -210,39 +239,52 @@ body {
   color: #555;
 }
 
+/* Footer */
+footer {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+}
+
 /* Media Queries */
 
 /* For small devices (phones) */
 @media (max-width: 600px) {
-  body {
+  #navbar {
+    flex-direction: column;
+    height: auto;
     padding: 10px;
+  }
+
+  #logo-container {
+    margin-bottom: 10px;
+  }
+
+  #nav-links {
+    flex-direction: column;
     gap: 10px;
   }
 
-  /* Adjust logo size */
-  #HaulersUnitedLogo img {
-    max-width: 100px; /* Smaller logo for mobile */
+  #nav-links button {
+    width: 100%; /* Buttons take full width on smaller screens */
   }
 
-  /* Stack tool and map */
   #tool-container {
     flex-direction: column; /* Stack elements vertically */
     gap: 15px; /* Add spacing between tool and map */
     padding: 0; /* Remove extra padding */
   }
 
-  /* Make tool and map take full width */
   #discount-tool, #map-container {
     width: 100%;
     max-width: 100%;
   }
 
-  /* Adjust map height */
   #map-container {
     height: 400px;
   }
 
-  /* Adjust button and input sizes for mobile */
   #discount-tool button {
     font-size: 14px;
     padding: 10px;
@@ -254,7 +296,6 @@ body {
     width: calc(100% - 16px); /* Prevent horizontal overflow */
   }
 
-  /* Highlighted Stations List */
   #highlightedStationsList {
     max-height: 200px;
   }

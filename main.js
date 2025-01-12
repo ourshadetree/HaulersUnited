@@ -12,6 +12,62 @@ let directionsServiceReady = false;
 let isMapReady = false;
 let autoCompleteSingle;
 
+const spreadsheetId = '1wBdV3SB94eB5U49OWn2BQNGFQ8x8_O9SzUslIdqZ_2o';
+const apiKey = "AIzaSyDYpNJXRFRuQq5IV8LQZi8E90r1gIaiORI"; 
+
+// Function to fetch the last modified time from the Google Sheets API
+async function fetchLastUpdatedTime() {
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}?fields=developerMetadata&key=${apiKey}`;
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+
+    // Check for 'developerMetadata' and 'lastModified'
+    if (data.developerMetadata) {
+      const lastModifiedMetadata = data.developerMetadata.find(meta => meta.metadataKey === 'lastModified');
+      if (lastModifiedMetadata && lastModifiedMetadata.metadataValue) {
+        return new Date(lastModifiedMetadata.metadataValue);
+      }
+    }
+
+    console.warn("No lastModified metadata found in the response.");
+    return null;
+  } catch (error) {
+    console.error("Error fetching last updated time:", error);
+    return null;
+  }
+}
+
+// Function to display the last updated time in the footer
+async function displayLastUpdatedTime() {
+  const footerElement = document.getElementById('last-updated');
+  const lastUpdatedTime = await fetchLastUpdatedTime();
+
+  if (lastUpdatedTime) {
+    // Format the date into a readable string
+    const options = {
+      weekday: 'long', // Full weekday name
+      year: 'numeric',
+      month: 'long', // Full month name
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      timeZoneName: 'short' // Include timezone abbreviation
+    };
+
+    const formattedTime = lastUpdatedTime.toLocaleString('en-US', options);
+    footerElement.textContent = `Prices last updated: ${formattedTime}`;
+  } else {
+    footerElement.textContent = 'Failed to fetch the last updated time.';
+  }
+}
+
+
+// Call the display function on page load
+displayLastUpdatedTime();
+
+
 // Function to handle tool selection and toggle visibility
 function updateToolType() {
   const toolType = document.getElementById("toolType").value;
@@ -28,11 +84,13 @@ function updateToolType() {
   highlightedStationsList.innerHTML = "";
   highlightedStationsContainer.style.display = "none";
 
-  // Show the selected tool
+  // Show the selected tool and update the heading
   if (toolType === "singleAddress") {
     singleAddressTool.style.display = "block";
+    highlightedStationsHeading.textContent = "Stations Near Address";
   } else if (toolType === "createRoute") {
     routeTool.style.display = "block";
+    highlightedStationsHeading.textContent = "Stations Near Route";
   }
 }
 
@@ -137,6 +195,9 @@ window.initMap = async function initMap() {
   directionsServiceReady = true;
   isMapReady = true;
 
+  // Attach zoom_changed event listener to dynamically resize markers
+  map.addListener("zoom_changed", resizeMarkersBasedOnZoom);
+
   document.addEventListener('DOMContentLoaded', () => {
 
     const inputs = ["singleAddressInput", "start", "end"];
@@ -224,14 +285,14 @@ async function findStationsForSingleAddress() {
         });
 
         const listItem = document.createElement("li");
-        listItem.className = "station-list-item";
+        listItem.className = "station-card";
 
         if (marker.stationType === "Pilot") {
           listItem.innerHTML = `
             <strong>${marker.stationType} Station:</strong> ${marker.getTitle()} <br>
             <b>Distance:</b> ${(distance / 1609.34).toFixed(2)} miles <br>
             <b>Today's Price:</b> $${marker.todaysPriceP?.toFixed(2) || "N/A"} <br>
-            <b>Tomorrow's Price:</b> $${marker.tomorrowPriceP?.toFixed(2) || "N/A"} <br>
+            
             <b>Retail Price:</b> $${marker.retailPriceP?.toFixed(2) || "N/A"} <br>
             <a href="${marker.hyperlinkP}" target="_blank">Station Website</a>
           `;
@@ -240,7 +301,7 @@ async function findStationsForSingleAddress() {
             <strong>${marker.stationType} Station:</strong> ${marker.getTitle()} <br>
             <b>Distance:</b> ${(distance / 1609.34).toFixed(2)} miles <br>
             <b>Today's Price:</b> $${marker.todaysPriceC?.toFixed(2) || "N/A"} <br>
-            <b>Tomorrow's Price:</b> $${marker.tomorrowPriceC?.toFixed(2) || "N/A"} <br>
+            
           `;
         }
 
@@ -316,14 +377,14 @@ async function highlightStationsAlongRoute(routePolyline) {
     });
 
     const listItem = document.createElement("li");
-    listItem.className = "station-list-item";
+    listItem.className = "station-card";
 
     if (marker.stationType === "Pilot") {
       listItem.innerHTML = `
         <strong>${marker.stationType} Station:</strong> ${marker.getTitle()} <br>
         <b>Distance:</b> ${(distance / 1609.34).toFixed(2)} miles <br>
         <b>Today's Price:</b> $${marker.todaysPriceP?.toFixed(2) || "N/A"} <br>
-        <b>Tomorrow's Price:</b> $${marker.tomorrowPriceP?.toFixed(2) || "N/A"} <br>
+        
         <b>Retail Price:</b> $${marker.retailPriceP?.toFixed(2) || "N/A"} <br>
         <a href="${marker.hyperlinkP}" target="_blank">Station Website</a>
       `;
@@ -332,7 +393,7 @@ async function highlightStationsAlongRoute(routePolyline) {
         <strong>${marker.stationType} Station:</strong> ${marker.getTitle()} <br>
         <b>Distance:</b> ${(distance / 1609.34).toFixed(2)} miles <br>
         <b>Today's Price:</b> $${marker.todaysPriceC?.toFixed(2) || "N/A"} <br>
-        <b>Tomorrow's Price:</b> $${marker.tomorrowPriceC?.toFixed(2) || "N/A"} <br>
+      
       `;
     }
 
@@ -452,7 +513,7 @@ function plotLocationsOnMap(map, locations) {
             <b>City:</b> ${location.cityP}, ${location.stateP}<br>
             <b>Today's Price:</b> $${location.todaysPriceP?.toFixed(2) || "N/A"}<br>
             <b>Retail Price:</b> $${location.retailPriceP?.toFixed(2) || "N/A"}<br>
-            <b>Tomorrow's Price:</b> $${location.tomorrowPriceP?.toFixed(2) || "N/A"}<br>
+           
             <a href="${location.hyperlinkP}" target="_blank">Station Website</a>
           </div>
         `);
@@ -484,7 +545,7 @@ function plotLocationsOnMap(map, locations) {
             <strong>Casey Station</strong><br>
             <b>City:</b> ${location.cityC}, ${location.stateC}<br>
             <b>Today's Price:</b> $${location.todaysPriceC?.toFixed(2) || "N/A"}<br>
-            <b>Tomorrow's Price:</b> $${location.tomorrowPriceC?.toFixed(2) || "N/A"}<br>
+            
           </div>
         `);
         infoWindow.open(map, caseyMarker);
@@ -494,6 +555,33 @@ function plotLocationsOnMap(map, locations) {
     }
   });
 }
+
+function resizeMarkersBasedOnZoom() {
+  const zoomLevel = map.getZoom(); // Get the current zoom level
+  const defaultZoom = 5; // The initial zoom level
+  const defaultSize = 16; // Default marker size at initial zoom
+  let markerSize;
+
+  // Adjust the size based on the zoom level
+  if (zoomLevel > defaultZoom) {
+    markerSize = defaultSize + (zoomLevel - defaultZoom) * 4; // Increase size for zooming in
+  } else {
+    markerSize = Math.max(10, defaultSize - (defaultZoom - zoomLevel) * 1.5); // Decrease size for zooming out, with a minimum size
+  }
+
+  // Update the icon size for all markers
+  gasStationMarkers.forEach(marker => {
+    const icon = marker.getIcon();
+    if (icon) {
+      marker.setIcon({
+        ...icon,
+        scaledSize: new google.maps.Size(markerSize, markerSize), // Set the new size
+      });
+    }
+  });
+}
+
+
 
 
 function clearMarkers(markerArray) {

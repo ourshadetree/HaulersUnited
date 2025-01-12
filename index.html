@@ -7,11 +7,29 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="logo-container">
-    <a id="HaulersUnitedLogo" href="https://haulersunited.org" target="_blank">
-      <img src="assets/logo wordmark HU 3 no back.png" alt="Haulers United Logo and Link Back to Website">
-    </a>
-  </div>
+  <!-- Navbar -->
+  <nav id="navbar" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; background-color: #1A73E8; color: white;">
+    <!-- Logo -->
+    <div id="logo-container">
+      
+        <img src="assets/logo wordmark HU 3 no back.png" alt="Haulers United Logo">
+      </a>
+    </div>
+    <!-- Navigation Links -->
+    <div id="nav-links" style="display: flex; gap: 20px;">
+      <a href="https://haulersunited.org" target="_blank">
+        <button>
+          Home
+        </button>
+      </a>
+      <a href="https://www.haulersunited.org/join" target="_blank">
+        <button id="signup-button">
+          Sign Up
+        </button>
+      </a>
+    </div>
+  </nav>
+
   <div id="tool-container">
     <div id="discount-tool">
       <h2>Discount Lookup Tool</h2>
@@ -48,11 +66,10 @@
           </div>
         </div>
         <button onclick="performRoute()" id="calculateRoute">Route</button>
-        
       </div>
 
       <div id="highlightedStationsContainer" style="display: none;">
-        <h3>Stations Near Route:</h3>
+        <h3 id="highlightedStationsHeading">Stations Near Route:</h3>
         <ul id="highlightedStationsList"></ul>
       </div>
       <div id="station-toggle">
@@ -62,19 +79,11 @@
     <div id="map-container">
       <div id="map" style="height: 500px; width: 100%;"></div>
     </div>
+    
   </div>
-
-  <!-- New Section: Sign Up -->
-  <div id="signup-container" style="text-align: center; margin-top: 20px;">
-    <p style="font-size: 16px; margin-bottom: 10px;">
-      No membership fees or volume requirements. Get these prices today regardless of how many gallons you purchase.
-    </p>
-    <a href="https://www.haulersunited.org/join" target="_blank">
-      <button id="signup-button" style="padding: 12px 20px; font-size: 16px; background-color: #1A73E8; color: white; border: none; border-radius: 5px; cursor: pointer;">
-        Sign Up Here
-      </button>
-    </a>
-  </div>
+  <footer>
+    <p id="last-updated">Prices updated: fetching data...</p>
+  </footer>
 
   <!-- Google Maps API -->
   <script 
