@@ -274,6 +274,7 @@ footer {
     flex-direction: column; /* Stack elements vertically */
     gap: 15px; /* Add spacing between tool and map */
     padding: 0; /* Remove extra padding */
+    margin-top: 200px;
   }
 
   #discount-tool, #map-container {
