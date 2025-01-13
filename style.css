@@ -21,7 +21,7 @@ body {
   left: 0;
   width: 100%;
   height: 80px;
-  background-color: #3828C5;
+  background-color: #0A0837;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -58,8 +58,8 @@ body {
   font-size: 16px;
   font-weight: bold;
   background-color: white;
-  color: #3828C5;
-  border: 2px solid #3828C5;
+  color: #0A0837;
+  border: 2px solid #0A0837;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
@@ -70,6 +70,110 @@ body {
   color: white; /* Change text to white */
   border-color: #261b8c; /* Match hover background */
 }
+
+/* Enhanced Toggle Switch */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 100%; /* Full width of the container */
+  max-width: 400px; /* Restrict maximum width for responsiveness */
+  height: 50px; /* Adequate height for readability */
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #0A0837; /* Keep background grey */
+  border-radius: 25px; /* Rounded edges */
+  overflow: hidden; /* Hide overflowing content */
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 40px;
+  width: calc(50% - 5px); /* Half the width of the slider */
+  left: 5px; /* Initial spacing from the left */
+  bottom: 5px;
+  background-color: white;
+  transition: transform 0.4s ease; /* Smooth slide */
+  border-radius: 20px;
+  z-index: 2; /* Ensure button stays above other content */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+input:checked + .slider:before {
+  transform: translateX(calc(100% - 50%)); /* Aligns the button to the right */
+}
+
+input:not(:checked) + .slider:before {
+  transform: translateX(0); /* Aligns the button to the left */
+}
+
+
+.toggle-labels {
+  position: absolute;
+  display: flex;
+  width: 100%; /* Full width for labels */
+  height: 100%;
+  justify-content: space-between; /* Align labels to the left and right */
+  align-items: center; /* Vertically center the text */
+  padding: 0 20px; /* Add padding for spacing */
+  pointer-events: none; /* Ensure text doesn't interfere with clicks */
+}
+
+.label-left, .label-right {
+  flex: 1;
+  text-align: center;
+  font-size: 16px; /* Adjust for readability */
+  font-weight: bold;
+  color: white; /* Ensure text color is always white */
+  transition: opacity 0.4s ease; /* Smooth transition for dimming */
+}
+
+.label-left {
+  padding-right: 30px;
+}
+
+.label-right {
+  padding-right: 40px;
+}
+
+input:not(:checked) + .slider .label-left {
+  opacity: 1; /* Dim the left label when unchecked */
+}
+
+input:not(:checked) + .slider .label-right {
+  opacity: 1; /* Highlight the right label when unchecked */
+}
+
+input:checked + .slider .label-left {
+  opacity: 1; /* Highlight the left label when checked */
+}
+
+input:checked + .slider .label-right {
+  opacity: 1; /* Dim the right label when checked */
+}
+
+input:checked + .slider:before {
+  transform: translateX(0); /* Button stays on the left when checked */
+}
+
+input:not(:checked) + .slider:before {
+  transform: translateX(100%); /* Button moves to the right when unchecked */
+}
+
+
 
 /* Tool Container */
 #tool-container {
@@ -90,7 +194,7 @@ body {
   flex: 1;
   max-width: 600px;
   text-align: center;
-  border: 2px solid #3828C5;
+  border: 2px solid #0A0837;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0px 10px 20px rgba(56, 40, 197, 0.3);
@@ -100,7 +204,7 @@ body {
 }
 
 #discount-tool h2 {
-  color: #3828C5;
+  color: #0A0837;
   font-size: 24px;
   margin-bottom: 20px;
 }
@@ -108,12 +212,12 @@ body {
 /* Buttons */
 #discount-tool button,
 #station-toggle button {
-  width: 100%;
+  width: 70%;
   padding: 12px;
   margin-top: 20px;
   font-size: 16px;
   font-weight: bold;
-  background-color: #3828C5;
+  background-color: #0A0837;
   color: white;
   border: none;
   border-radius: 5px;
@@ -133,7 +237,7 @@ body {
   width: calc(100% - 20px); /* Adjust for padding and borders */
   padding: 10px;
   font-size: 16px;
-  border: 2px solid #3828C5;
+  border: 2px solid #0A0837;
   border-radius: 5px;
   margin-bottom: 20px;
   box-sizing: border-box;
@@ -157,7 +261,7 @@ body {
   display: block;
   font-size: 16px;
   font-weight: bold;
-  color: #3828C5;
+  color: #0A0837;
   margin-bottom: 10px;
 }
 
@@ -166,7 +270,7 @@ body {
   max-width: 300px;
   padding: 10px;
   font-size: 16px;
-  border: 2px solid #3828C5;
+  border: 2px solid #0A0837;
   border-radius: 5px;
   background-color: white;
   color: #333;

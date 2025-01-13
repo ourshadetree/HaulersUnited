@@ -39,24 +39,45 @@ async function fetchLastUpdatedTime() {
 }
 
 // Function to toggle between Single Address Lookup and Create Route
+// below is the function of toggleTool that works for the button version of the tool switcher
+// function toggleTool() {
+//   const singleAddressTool = document.getElementById("singleAddressTool");
+//   const routeTool = document.getElementById("routeTool");
+//   const toggleButton = document.getElementById("toggleTool");
+//   const highlightedStationsHeading = document.getElementById("highlightedStationsHeading");
+
+//   if (singleAddressTool.style.display === "block") {
+//     singleAddressTool.style.display = "none";
+//     routeTool.style.display = "block";
+//     toggleButton.textContent = "Switch to Single Address Lookup";
+//     highlightedStationsHeading.textContent = "Stations Near Route:";
+//   } else {
+//     singleAddressTool.style.display = "block";
+//     routeTool.style.display = "none";
+//     toggleButton.textContent = "Switch to Create Route";
+//     highlightedStationsHeading.textContent = "Stations Near Address:";
+//   }
+// }
+
 function toggleTool() {
   const singleAddressTool = document.getElementById("singleAddressTool");
   const routeTool = document.getElementById("routeTool");
-  const toggleButton = document.getElementById("toggleTool");
-  const highlightedStationsHeading = document.getElementById("highlightedStationsHeading");
+  const toggleToolSwitch = document.getElementById("toggleToolSwitch");
+  const toggleToolLabel = document.getElementById("toggleToolLabel");
 
-  if (singleAddressTool.style.display === "block") {
+  if (toggleToolSwitch.checked) {
+    // Show Create Route Tool
     singleAddressTool.style.display = "none";
     routeTool.style.display = "block";
-    toggleButton.textContent = "Switch to Single Address Lookup";
-    highlightedStationsHeading.textContent = "Stations Near Route:";
+    toggleToolLabel.textContent = "Create Route";
   } else {
+    // Show Single Address Tool
     singleAddressTool.style.display = "block";
     routeTool.style.display = "none";
-    toggleButton.textContent = "Switch to Create Route";
-    highlightedStationsHeading.textContent = "Stations Near Address:";
+    toggleToolLabel.textContent = "Single Address Lookup";
   }
 }
+
 
 // Ensure Single Address Lookup is displayed by default
 window.addEventListener("DOMContentLoaded", () => {

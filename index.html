@@ -35,28 +35,50 @@
       <h2>Discount Lookup Tool</h2>
   
       <!-- Toggle Button for Tool Selection -->
-      <div id="tool-selection">
+      <!-- <div id="tool-selection">
         <button id="toggleTool" onclick="toggleTool()">Switch to Create Route</button>
+      </div> -->
+
+      <!-- // Toggle Switch for Tool Selection -->
+      <!-- <div id="tool-selection" style="text-align: center; margin: 20px 0;">
+        <label class="toggle-switch">
+          <input type="checkbox" id="toggleToolSwitch" onchange="toggleTool()">
+          <span class="slider"></span>
+        </label>
+        <p id="toggleToolLabel">Single Address Lookup</p>
+      </div> -->
+
+      <div id="tool-selection" style="text-align: center; margin: 20px 0;">
+        <label class="toggle-switch">
+          <input type="checkbox" id="toggleToolSwitch" onchange="toggleTool()">
+          <span class="slider">
+            <span class="toggle-labels">
+              <span class="label-left">Address Lookup</span>
+              <span class="label-right">Route Lookup</span>
+            </span>
+          </span>
+        </label>
       </div>
+      
   
       <!-- Single Address Tool (Displayed by default) -->
       <div id="singleAddressTool" style="display: block;">
-        <h3>Single Address Lookup</h3>
-        <label for="singleAddressInput">Enter Address:</label>
+        <h3>Address Lookup</h3>
+        <label for="singleAddressInput"></label>
         <input type="text" id="singleAddressInput" name="no-autocomplete" placeholder="Enter the address" autocomplete="new-password" />
         <button onclick="findStationsForSingleAddress()" id="findStations">Find Truck Stops</button>
       </div>
   
       <!-- Create Route Tool (Hidden by default) -->
       <div id="routeTool" style="display: none;">
-        <h3>Create Route</h3>
+        <h3>Route Lookup</h3>
         <div id="route-addresses">
           <div>
-            <label for="start">Starting Address:</label>
+            <label for="start"></label>
             <input type="text" id="start" placeholder="Enter starting address" />
           </div>
           <div>
-            <label for="end">Destination Address:</label>
+            <label for="end"></label>
             <input type="text" id="end" placeholder="Enter destination address" />
           </div>
         </div>
@@ -64,12 +86,12 @@
       </div>
   
       <div id="highlightedStationsContainer" style="display: none;">
-        <h3 id="highlightedStationsHeading">Stations Near Address:</h3>
+        <h3 id="highlightedStationsHeading">Truck Stops Nearby:</h3>
         <ul id="highlightedStationsList"></ul>
       </div>
-      <div id="station-toggle">
+      <!-- <div id="station-toggle">
         <button onclick="toggleGasStations()" id="toggleStations">Hide All Stations</button>
-      </div>
+      </div> -->
     </div>
     <div id="map-container">
       <div id="map" style="height: 500px; width: 100%;"></div>
