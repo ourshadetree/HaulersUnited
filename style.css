@@ -75,6 +75,7 @@ body {
 .toggle-switch {
   position: relative;
   display: inline-block;
+  margin-left: 73px;
   width: 100%; /* Full width of the container */
   max-width: 400px; /* Restrict maximum width for responsiveness */
   height: 50px; /* Adequate height for readability */
@@ -201,6 +202,7 @@ input:not(:checked) + .slider:before {
   background-color: white;
   box-sizing: border-box;
   overflow: hidden; /* Prevent content overflow */
+  
 }
 
 #discount-tool h2 {
