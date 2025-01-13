@@ -38,6 +38,36 @@ async function fetchLastUpdatedTime() {
   }
 }
 
+// Function to toggle between Single Address Lookup and Create Route
+function toggleTool() {
+  const singleAddressTool = document.getElementById("singleAddressTool");
+  const routeTool = document.getElementById("routeTool");
+  const toggleButton = document.getElementById("toggleTool");
+  const highlightedStationsHeading = document.getElementById("highlightedStationsHeading");
+
+  if (singleAddressTool.style.display === "block") {
+    singleAddressTool.style.display = "none";
+    routeTool.style.display = "block";
+    toggleButton.textContent = "Switch to Single Address Lookup";
+    highlightedStationsHeading.textContent = "Stations Near Route:";
+  } else {
+    singleAddressTool.style.display = "block";
+    routeTool.style.display = "none";
+    toggleButton.textContent = "Switch to Create Route";
+    highlightedStationsHeading.textContent = "Stations Near Address:";
+  }
+}
+
+// Ensure Single Address Lookup is displayed by default
+window.addEventListener("DOMContentLoaded", () => {
+  const singleAddressTool = document.getElementById("singleAddressTool");
+  const routeTool = document.getElementById("routeTool");
+
+  singleAddressTool.style.display = "block";
+  routeTool.style.display = "none";
+});
+
+
 // Function to display the last updated time in the footer
 async function displayLastUpdatedTime() {
   const footerElement = document.getElementById('last-updated');
@@ -291,7 +321,7 @@ async function findStationsForSingleAddress() {
           listItem.innerHTML = `
             <strong>${marker.stationType} Station:</strong> ${marker.getTitle()} <br>
             <b>Distance:</b> ${(distance / 1609.34).toFixed(2)} miles <br>
-            <b>Today's Price:</b> $${marker.todaysPriceP?.toFixed(2) || "N/A"} <br>
+            <b>Hauler's Price:</b> $${marker.todaysPriceP?.toFixed(2) || "N/A"} <br>
             
             <b>Retail Price:</b> $${marker.retailPriceP?.toFixed(2) || "N/A"} <br>
             <a href="${marker.hyperlinkP}" target="_blank">Station Website</a>
@@ -300,7 +330,7 @@ async function findStationsForSingleAddress() {
           listItem.innerHTML = `
             <strong>${marker.stationType} Station:</strong> ${marker.getTitle()} <br>
             <b>Distance:</b> ${(distance / 1609.34).toFixed(2)} miles <br>
-            <b>Today's Price:</b> $${marker.todaysPriceC?.toFixed(2) || "N/A"} <br>
+            <b>Hauler's Price:</b> $${marker.todaysPriceC?.toFixed(2) || "N/A"} <br>
             
           `;
         }
@@ -383,7 +413,7 @@ async function highlightStationsAlongRoute(routePolyline) {
       listItem.innerHTML = `
         <strong>${marker.stationType} Station:</strong> ${marker.getTitle()} <br>
         <b>Distance:</b> ${(distance / 1609.34).toFixed(2)} miles <br>
-        <b>Today's Price:</b> $${marker.todaysPriceP?.toFixed(2) || "N/A"} <br>
+        <b>Hauler's Price:</b> $${marker.todaysPriceP?.toFixed(2) || "N/A"} <br>
         
         <b>Retail Price:</b> $${marker.retailPriceP?.toFixed(2) || "N/A"} <br>
         <a href="${marker.hyperlinkP}" target="_blank">Station Website</a>
@@ -392,7 +422,7 @@ async function highlightStationsAlongRoute(routePolyline) {
       listItem.innerHTML = `
         <strong>${marker.stationType} Station:</strong> ${marker.getTitle()} <br>
         <b>Distance:</b> ${(distance / 1609.34).toFixed(2)} miles <br>
-        <b>Today's Price:</b> $${marker.todaysPriceC?.toFixed(2) || "N/A"} <br>
+        <b>Hauler's Price:</b> $${marker.todaysPriceC?.toFixed(2) || "N/A"} <br>
       
       `;
     }
@@ -511,7 +541,7 @@ function plotLocationsOnMap(map, locations) {
           <div>
             <strong>Pilot Station</strong><br>
             <b>City:</b> ${location.cityP}, ${location.stateP}<br>
-            <b>Today's Price:</b> $${location.todaysPriceP?.toFixed(2) || "N/A"}<br>
+            <b>Hauler's Price:</b> $${location.todaysPriceP?.toFixed(2) || "N/A"}<br>
             <b>Retail Price:</b> $${location.retailPriceP?.toFixed(2) || "N/A"}<br>
            
             <a href="${location.hyperlinkP}" target="_blank">Station Website</a>
@@ -544,7 +574,7 @@ function plotLocationsOnMap(map, locations) {
           <div>
             <strong>Casey Station</strong><br>
             <b>City:</b> ${location.cityC}, ${location.stateC}<br>
-            <b>Today's Price:</b> $${location.todaysPriceC?.toFixed(2) || "N/A"}<br>
+            <b>Hauler's Price:</b> $${location.todaysPriceC?.toFixed(2) || "N/A"}<br>
             
           </div>
         `);
