@@ -72,13 +72,24 @@ body {
 }
 
 /* Enhanced Toggle Switch */
+
+.tool-selection {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  
+}
+
 .toggle-switch {
   position: relative;
-  display: inline-block;
-  margin-left: 73px;
+  display: block;
   width: 100%; /* Full width of the container */
   max-width: 400px; /* Restrict maximum width for responsiveness */
   height: 50px; /* Adequate height for readability */
+  margin: 0 auto; /* Center the switch */
 }
 
 .toggle-switch input {
