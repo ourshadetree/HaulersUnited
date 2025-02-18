@@ -1,424 +1,422 @@
-/* General Styles */
-html, body {
-  min-height: 120vh;
-  margin: 0;
-  padding: 0;
-}
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  align-items: center;
-  box-sizing: border-box;
-}
-
-/* Navbar Styles */
-#navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 80px;
-  background-color: #0A0837;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  color: white;
-  box-sizing: border-box;
-}
-
-#navbar #logo-container {
-  display: flex;
-  align-items: center;
-}
-
-#navbar #logo-container img {
-  max-width: 250px; /* Adjusted size */
-  height: auto;
-}
-
-#nav-links {
-  display: flex;
-  gap: 20px;
-  justify-content: flex-end;
-  align-items: center;
-}
-
-#nav-links a {
-  text-decoration: none;
-}
-
-#nav-links a button {
-  padding: 8px 16px;
-  font-size: 16px;
-  font-weight: bold;
-  background-color: white;
-  color: #0A0837;
-  border: 2px solid #0A0837;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-}
-
-#nav-links a button:hover {
-  background-color: #261b8c; /* Slightly darker shade */
-  color: white; /* Change text to white */
-  border-color: #261b8c; /* Match hover background */
-}
-
-/* Enhanced Toggle Switch */
-
-.tool-selection {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  width: 100%;
+/* ======================================
+   BASIC RESETS & GLOBAL STYLES
+   ====================================== */
+   .hidden {
+    display: none !important;
+  }
   
-}
-
-.toggle-switch {
-  position: relative;
-  display: block;
-  width: 100%; /* Full width of the container */
-  max-width: 400px; /* Restrict maximum width for responsiveness */
-  height: 50px; /* Adequate height for readability */
-  margin: 0 auto; /* Center the switch */
-}
-
-.toggle-switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #0A0837; /* Keep background grey */
-  border-radius: 25px; /* Rounded edges */
-  overflow: hidden; /* Hide overflowing content */
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 40px;
-  width: calc(50% - 5px); /* Half the width of the slider */
-  left: 5px; /* Initial spacing from the left */
-  bottom: 5px;
-  background-color: white;
-  transition: transform 0.4s ease; /* Smooth slide */
-  border-radius: 20px;
-  z-index: 2; /* Ensure button stays above other content */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-input:checked + .slider:before {
-  transform: translateX(calc(100% - 50%)); /* Aligns the button to the right */
-}
-
-input:not(:checked) + .slider:before {
-  transform: translateX(0); /* Aligns the button to the left */
-}
-
-
-.toggle-labels {
-  position: absolute;
-  display: flex;
-  width: 100%; /* Full width for labels */
-  height: 100%;
-  justify-content: space-between; /* Align labels to the left and right */
-  align-items: center; /* Vertically center the text */
-  padding: 0 20px; /* Add padding for spacing */
-  pointer-events: none; /* Ensure text doesn't interfere with clicks */
-}
-
-.label-left, .label-right {
-  flex: 1;
-  text-align: center;
-  font-size: 16px; /* Adjust for readability */
-  font-weight: bold;
-  color: white; /* Ensure text color is always white */
-  transition: opacity 0.4s ease; /* Smooth transition for dimming */
-}
-
-.label-left {
-  padding-right: 30px;
-}
-
-.label-right {
-  padding-right: 40px;
-}
-
-input:not(:checked) + .slider .label-left {
-  opacity: 1; /* Dim the left label when unchecked */
-}
-
-input:not(:checked) + .slider .label-right {
-  opacity: 1; /* Highlight the right label when unchecked */
-}
-
-input:checked + .slider .label-left {
-  opacity: 1; /* Highlight the left label when checked */
-}
-
-input:checked + .slider .label-right {
-  opacity: 1; /* Dim the right label when checked */
-}
-
-input:checked + .slider:before {
-  transform: translateX(0); /* Button stays on the left when checked */
-}
-
-input:not(:checked) + .slider:before {
-  transform: translateX(100%); /* Button moves to the right when unchecked */
-}
-
-
-
-/* Tool Container */
-#tool-container {
-  margin-top: 130px; /* Adjust to account for the fixed navbar */
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 20px;
-  justify-content: center;
-  width: 100%;
-  max-width: 1200px; /* Restrict maximum width for larger screens */
-  padding: 20px;
-  box-sizing: border-box;
-  position: relative;
-}
-
-#discount-tool {
-  flex: 1;
-  max-width: 600px;
-  text-align: center;
-  border: 2px solid #0A0837;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 10px 20px rgba(56, 40, 197, 0.3);
-  background-color: white;
-  box-sizing: border-box;
-  overflow: hidden; /* Prevent content overflow */
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    box-sizing: border-box;
+  }
   
-}
-
-#discount-tool h2 {
-  color: #0A0837;
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-/* Buttons */
-#discount-tool button,
-#station-toggle button {
-  width: 70%;
-  padding: 12px;
-  margin-top: 20px;
-  font-size: 16px;
-  font-weight: bold;
-  background-color: #0A0837;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-#discount-tool button:hover,
-#station-toggle button:hover {
-  background-color: #261b8c;
-  box-shadow: 0 4px 8px rgba(56, 40, 197, 0.5);
-}
-
-/* Input Fields */
-#discount-tool input[type="text"],
-#route-addresses input {
-  width: calc(100% - 20px); /* Adjust for padding and borders */
-  padding: 10px;
-  font-size: 16px;
-  border: 2px solid #0A0837;
-  border-radius: 5px;
-  margin-bottom: 20px;
-  box-sizing: border-box;
-  background-color: white;
-}
-
-#discount-tool input[type="text"]:focus,
-#route-addresses input:focus {
-  outline: none;
-  border-color: #261b8c;
-  box-shadow: 0 0 5px rgba(56, 40, 197, 0.5);
-}
-
-/* Tool Selection Styles */
-#tool-selection {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-#tool-selection label {
-  display: block;
-  font-size: 16px;
-  font-weight: bold;
-  color: #0A0837;
-  margin-bottom: 10px;
-}
-
-#tool-selection select {
-  width: 100%;
-  max-width: 300px;
-  padding: 10px;
-  font-size: 16px;
-  border: 2px solid #0A0837;
-  border-radius: 5px;
-  background-color: white;
-  color: #333;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  appearance: none; /* Remove default browser styles */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%233828C5' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  background-size: 12px 12px;
-}
-
-#tool-selection select:hover {
-  border-color: #261b8c;
-}
-
-#tool-selection select:focus {
-  outline: none;
-  border-color: #261b8c;
-  box-shadow: 0 0 5px rgba(56, 40, 197, 0.5);
-}
-
-/* Map Container */
-#map-container {
-  flex: 1;
-  max-width: 600px;
-  height: 500px;
-}
-
-#map {
-  width: 100%;
-  height: 100%;
-  border-radius: 10px;
-}
-
-/* Highlighted Stations List */
-#highlightedStationsList {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 0;
-  list-style-type: none;
-  max-height: 300px;
-  overflow-y: auto;
-}
-
-.station-card {
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
-  background-color: #f9f9f9;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
-}
-
-.station-card:hover {
-  transform: scale(1.02); /* Slightly enlarge on hover */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  background-color: #ccc; /* Fill background with grey */
-  color: white; /* Change text to white */
-}
-
-.station-card h4 {
-  margin: 0 0 5px 0;
-}
-
-.station-card p {
-  margin: 0;
-  font-size: 0.9em;
-  color: #555;
-}
-
-/* Footer */
-footer {
-  margin-top: 20px;
-  text-align: center;
-  font-size: 14px;
-  color: #666;
-}
-
-/* Media Queries */
-
-/* For small devices (phones) */
-@media (max-width: 600px) {
-  #navbar {
+  /* Let body use flex column layout (optional) */
+  body {
+    display: flex;
     flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+  
+  /* ======================================
+     NAVBAR (FIXED)
+     ====================================== */
+  #navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background-color: #0A0837;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    color: white;
+    box-sizing: border-box;
+  }
+  
+  #logo-container img {
+    max-width: 250px;
     height: auto;
-    padding: 10px;
   }
-
-  #logo-container {
-    margin-bottom: 10px;
-  }
-
+  
   #nav-links {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  
+  #nav-links a {
+    text-decoration: none;
+  }
+  
+  /* Navbar buttons */
+  #nav-links a button {
+    padding: 8px 16px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: white;
+    color: #0A0837;
+    border: 2px solid #0A0837;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+  #nav-links a button:hover {
+    background-color: #261b8c;
+    color: white;
+    border-color: #261b8c;
+  }
+  
+  /* ======================================
+     SECOND NAVBAR: Address/Create TABS
+     ====================================== */
+  #tool-tabs {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* left align */
+    gap: 1rem;
+    padding: 10px 20px;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #ccc;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .tool-tab {
+    cursor: pointer;
+    padding: 8px 16px;
+    color: #777;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  .tool-tab:hover {
+    background-color: #e2e2e2;
+  }
+  .tool-tab.active {
+    background-color: #2664d8;
+    color: white;
+  }
+  
+  /* ======================================
+     MAIN TOOL CONTAINER
+     ====================================== */
+  #tool-container {
+    /* Push content below fixed navbar */
+    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 90%;        /* narrower than 100% for a cleaner layout */
+    max-width: 1200px; /* keep it centered on large screens */
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+  }
+  
+  /* The discount tool: no border, no shadow anymore */
+  #discount-tool {
+    width: 100%;
+    box-sizing: border-box;
+    border: none !important;
+    box-shadow: none !important;
+    background-color: transparent !important;
+    padding: 0 20px;
+    text-align: left; /* Align contents left if you prefer */
+  }
+  
+  #tool-top-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 10px;
+    flex-wrap: nowrap;
+  }
+  
+  /* ======================================
+     ICON BUTTON FOR FILTERS/REFRESH
+     ====================================== */
+  .icon-button {
+    background-color: transparent;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: #777; 
+    transition: background-color 0.3s, color 0.3s;
+    border-radius: 5px;
+  }
+  .icon-button:hover {
+    background-color: #e2e2e2;
+  }
+  .icon-button.active {
+    background-color: #2664d8;
+    color: #fff;
+  }
+  .icon-button svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+  }
+  /* ======================================
+     Filter Dropdown SECTION
+     ====================================== */
+  .filter-select {
+    width: 170px;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #0A0837;
+    border-radius: 5px;
+    color: grey;
+    cursor: pointer;
+  }
+
+  /* #filter-select:hover {
+
+  }
+
+     /* ======================================
+     Filter Dropdown Dialogue SECTION
+     ====================================== */
+  /* .dialog-box {
+
+  }
+
+  .dialog-content {
+
+  } */
+  /* ======================================
+     FILTER SECTION
+     ====================================== */ */
+  #filter-section {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+  
+  #filters {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    width: 90%;
+    max-width: s;
+    margin: 0 auto;
+    flex-wrap: nowrap;
+  }
+  
+  
+  /* ======================================
+     SINGLE & ROUTE TOOLS
+     ====================================== */
+  #singleAddressTool input,
+  #route-addresses input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #0A0837;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    background-color: white;
+    box-sizing: border-box;
+  }
+  #singleAddressTool input:focus,
+  #route-addresses input:focus {
+    outline: none;
+    border-color: #261b8c;
+    box-shadow: 0 0 5px rgba(56, 40, 197, 0.5);
+  }
+  
+  /* ======================================
+     ACTION BUTTONS (BOTTOM ROW)
+     ====================================== */
+  #tool-bottom-row {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 1rem;
+    justify-content: center;
+    
+  }
+  
+  #tool-bottom-row button {
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #0A0837;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+  }
+  #tool-bottom-row button:hover {
+    background-color: #261b8c;
+    box-shadow: 0 4px 8px rgba(56, 40, 197, 0.5);
+  }
+  
+  /* ======================================
+     TWO-COLUMN LAYOUT (STOPS + MAP)
+     ====================================== */
+  #tool-layout {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
+  
+  /* LEFT COLUMN: Station List */
+  #highlightedStationsContainer {
+    flex: 0 0 35%;
+    max-height: 600px;
+    overflow-y: auto;
+    border: 2px solid #0A0837; 
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #fff;
+    box-shadow: 0px 10px 20px rgba(56, 40, 197, 0.1);
+  }
+  #highlightedStationsHeading {
+    text-align: center;
+    margin-top: 0;
+  }
+
+  .station-card.highlight {
+    background-color: #ffffcc;  /* light yellow */
+    border: 2px solid #ff9900;
+  }
+
+  .card-prompt {
+    font-size: 0.9em;
+    color: #555;
+    margin-top: 5px;
+  }
+  
+  
+  /* RIGHT COLUMN: Map */
+  #map-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  #map {
+    width: 100%;
+    height: 500px;
+    border-radius: 10px;
+  }
+  
+  /* ======================================
+     STATION CARD LIST
+     ====================================== */
+  #highlightedStationsList {
+    display: flex;
     flex-direction: column;
     gap: 10px;
+    list-style-type: none;
+    padding: 0;
+    max-height: 400px;
+    overflow-y: auto;
   }
-
-  #nav-links button {
-    width: 100%; /* Buttons take full width on smaller screens */
-  }
-
-  #tool-container {
-    flex-direction: column; /* Stack elements vertically */
-    width: 90%;
-    gap: 15px; /* Add spacing between tool and map */
-    padding: 0; /* Remove extra padding */
-    margin-top: 240px;
-   
-  }
-
-  #discount-tool, #map-container {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  #map-container {
-    height: 400px;
-    margin-top: 20px;
-  }
-
-  #discount-tool button {
-    font-size: 14px;
+  
+  .station-card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
     padding: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s, color 0.2s;
   }
-
-  #route-addresses input {
-    font-size: 14px; /* Smaller font size */
-    padding: 8px; /* Reduced padding */
-    width: calc(100% - 16px); /* Prevent horizontal overflow */
+  .station-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    background-color: #ccc;
+    color: white; 
   }
-
-  #highlightedStationsList {
-    max-height: 200px;
+  .station-card h4 {
+    margin: 0 0 5px 0;
   }
-}
+  .station-card p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #555;
+  }
+  
+  /* ======================================
+     FOOTER
+     ====================================== */
+  footer {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+  }
+  
+  /* ======================================
+     MEDIA QUERIES
+     ====================================== */
+  @media (max-width: 900px) {
+    #tool-layout {
+      flex-direction: column;
+    }
+    #highlightedStationsContainer,
+    #map-container {
+      flex: initial;
+      width: 100%;
+      max-height: auto;
+    }
+    #map {
+      height: 400px;
+    }
+  }
+  
+  @media (max-width: 600px) {
+    #navbar {
+      flex-direction: column;
+      height: auto;
+      padding: 10px;
+    }
+    #logo-container {
+      margin-bottom: 10px;
+    }
+    #nav-links {
+      flex-direction: column;
+      gap: 10px;
+    }
+    #nav-links button {
+      width: 100%;
+    }
+    #tool-container {
+      flex-direction: column;
+      width: 90%;
+      gap: 15px;
+      padding: 0;
+      margin-top: 240px; /* offset for navbar if needed */
+    }
+    #map-container {
+      height: 400px;
+      margin-top: 20px;
+    }
+    #tool-bottom-row button {
+      font-size: 14px;
+      padding: 10px;
+    }
+    #route-addresses input {
+      font-size: 14px;
+      padding: 8px;
+      width: calc(100% - 16px);
+    }
+    #highlightedStationsList {
+      max-height: 200px;
+    }
+  }
+  
